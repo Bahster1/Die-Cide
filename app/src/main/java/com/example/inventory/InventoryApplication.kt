@@ -18,6 +18,13 @@ package com.example.inventory
 import android.app.Application
 import com.example.inventory.data.ItemRoomDatabase
 
+// https://developer.android.com/codelabs/basic-android-kotlin-training-persisting-data-room?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-kotlin-unit-5-pathway-2%3Fhl%3Den%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-training-persisting-data-room&hl=en#0
+// https://developer.android.com/codelabs/basic-android-kotlin-training-update-data-room?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-kotlin-unit-5-pathway-2%3Fhl%3Den%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-training-update-data-room&hl=en#0
+// Question asked
+// App's response
+// Number rolled
+// User's choice
+
 class InventoryApplication : Application()
 {
     val database: ItemRoomDatabase by lazy { ItemRoomDatabase.getDatabase(this) }
