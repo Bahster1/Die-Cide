@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Die-Cide</string>
+    <string name="title">Die-Cide</string>
+    <string name="text_enter_prompt">What do you need to decide?</string>
 </resources>
