@@ -7,9 +7,10 @@ import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
+import kotlinx.coroutines.runBlocking
 
 class Response {
-    suspend fun response(question: String, diceResult: Int): String? {
+    fun response(question: String, diceResult: Int): String? = runBlocking {
         val apiKey = "INSERT API KEY HERE"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
 
@@ -26,7 +27,7 @@ class Response {
                 )
             )
         )
-        return openAI.chatCompletion(chatCompletionRequest).choices.first().message.content
+        return@runBlocking openAI.chatCompletion(chatCompletionRequest).choices.first().message.content
     }
 
 }
