@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">Die-Cide</string>
-    <string name="openai_response">%1$s</string>
 </resources>
