@@ -1,3 +1,6 @@
+/*
+ * Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
+ */
 package com.comp350.die_cide
 
 import androidx.appcompat.app.AppCompatActivity
