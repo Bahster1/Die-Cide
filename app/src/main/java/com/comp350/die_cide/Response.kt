@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 
 class Response {
     fun response(question: String, diceResult: Int): String? = runBlocking {
-        val apiKey = "INSERT API KEY HERE"
+        val apiKey = "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"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
 
         val chatCompletionRequest = ChatCompletionRequest(
