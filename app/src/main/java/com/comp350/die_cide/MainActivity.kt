@@ -9,22 +9,21 @@ import com.comp350.die_cide.QuestionInput.Companion.getUserInput
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    lateinit var msgTV: TextView
+    private lateinit var openAIResponse: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val response = Response().response("What is the date today?", 6)
-        msgTV = findViewById<TextView>(R.id.textView6)
-        msgTV.text = response
+        openAIResponse = findViewById(R.id.textView6)
 
         val submitButton: Button = findViewById(R.id.submit)
         val questionField: EditText = findViewById(R.id.userQuestion)
 
         submitButton.setOnClickListener {
             val userQuestionInput = getUserInput(questionField)
+            val response = Response().response(userQuestionInput, 6)
             Toast.makeText(applicationContext, "Your question: $userQuestionInput", Toast.LENGTH_SHORT).show()
+            openAIResponse.text = response
         }
     }
 }
