@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
             DiceLogic.onPlay(diceImage, dieValue)   // DICE ANIMATION BLOCK
 
             //testing to ensure "dieValue" is passed correctly - lives only in the Click event
-            val diceTest : TextView = findViewById(R.id.textView4)
-            diceTest.text = dieValue.toString()
+            //val diceTest : TextView = findViewById(R.id.textView4)
+            //diceTest.text = dieValue.toString()
         }
 
 
