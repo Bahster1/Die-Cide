@@ -50,8 +50,14 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
 
+    implementation("com.aallam.openai:openai-client:3.4.2")
+    implementation("io.ktor:ktor-client-okhttp:2.3.4")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
