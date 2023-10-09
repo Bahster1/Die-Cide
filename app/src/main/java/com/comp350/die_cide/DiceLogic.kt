@@ -1,3 +1,6 @@
+/*
+    * Copyright 2023 Ron Vincent V. Aspuria III
+*/
 package com.comp350.die_cide
 
 import android.graphics.drawable.AnimationDrawable
