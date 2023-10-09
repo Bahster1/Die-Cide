@@ -1,7 +1,8 @@
 /*
+    * Morgan's Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
+
     * Copyright 2023 Ron Vincent V. Aspuria III
 */
-
 package com.comp350.die_cide
 
 import android.os.Bundle
