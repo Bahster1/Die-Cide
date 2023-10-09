@@ -3,7 +3,7 @@
  * https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
  * https://stackoverflow.com/questions/55428670/where-to-write-functions-in-kotlin-that-will-be-used-from-other-activities-in-an
  *
- * Code written by Morgan McMurray with some assistance from Bradley Walsh
+ * Copyright 2023 Morgan McMurray and Bradley Walsh
  */
 
 package com.comp350.die_cide
