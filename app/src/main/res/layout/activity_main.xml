@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textAlignment="center"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:content="DiceLogic"
+    android:textAlignment="center">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/TopConstraintLayout"
@@ -73,17 +75,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/TopConstraintLayout">
 
-        <TextView
-            android:id="@+id/textView5"
+        <ImageView
+            android:id="@+id/diceBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="This is MiddleConstraintLayout"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/dice_20"
+            android:contentDescription="A 20 sided dice you can roll to help you decide!"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
