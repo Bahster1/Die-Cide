@@ -1,3 +1,7 @@
+/*
+    * Copyright 2023 Taylor Asplund
+*/
+
 package com.comp350.die_cide
 
 import com.aallam.openai.api.chat.ChatCompletionRequest
@@ -19,7 +23,7 @@ class Response {
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
-                    content = "You are a helpful decision making assistant"
+                    content = "You are a helpful decision making assistant. Make a decision based on the first number provided, if the number is above 10 say yes, if it is below say no. Give a reason why without saying what the number provided was. Do not mention whether the number is above or below 10. Do not mention the number provided."
                 ),
                 ChatMessage(
                     role = ChatRole.User,
