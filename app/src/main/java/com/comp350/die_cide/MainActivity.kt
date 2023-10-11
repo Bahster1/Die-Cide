@@ -8,6 +8,8 @@ package com.comp350.die_cide
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.EditText
@@ -33,8 +35,13 @@ class MainActivity : AppCompatActivity() {
             dieValue = DiceLogic.roll()             // DICE LOGIC BLOCK
             DiceLogic.onPlay(diceImage, dieValue)   // DICE ANIMATION BLOCK
             userQuestionInput = getUserInput(questionField)
-            response = Response().response(userQuestionInput, dieValue)
-            openAIResponse.text = response
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    response = Response().response(userQuestionInput, dieValue)
+                    openAIResponse.text = response
+                },
+                1500 // value in milliseconds
+            )
         }
     }
 }

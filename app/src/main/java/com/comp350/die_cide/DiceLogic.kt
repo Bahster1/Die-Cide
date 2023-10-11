@@ -26,7 +26,7 @@ class DiceLogic {
         var diceAnimation: AnimationDrawable? = null
         private var setTime: CountDownTimer? = null
         fun onPlay(diceImage : ImageView , dieValue : Int){
-            val randomTime = (5000..9000).random().toLong()
+            val randomTime = (1000..1500).random().toLong()
             setTime = object : CountDownTimer(randomTime, 1000) {
                 // For every Tick, a random dice image will be selected and replace the dice image
                 override fun onTick(p0: Long) {
