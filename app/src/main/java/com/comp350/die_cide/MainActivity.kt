@@ -6,14 +6,16 @@
 */
 package com.comp350.die_cide
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserInput
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
@@ -32,16 +34,16 @@ class MainActivity : AppCompatActivity() {
 
         // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
-            dieValue = DiceLogic.roll()             // DICE LOGIC BLOCK
-            DiceLogic.onPlay(diceImage, dieValue)   // DICE ANIMATION BLOCK
+            dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
+            DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
             userQuestionInput = getUserInput(questionField)
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    response = Response().response(userQuestionInput, dieValue)
-                    openAIResponse.text = response
-                },
-                1500 // value in milliseconds
-            )
+            CoroutineScope(Dispatchers.Main).launch {
+                response = withContext(Dispatchers.IO) {
+                    Response().response(userQuestionInput, dieValue)
+                }
+                DiceLogic.displayDiceFace(diceImage, dieValue)
+                openAIResponse.text = response
+            }
         }
     }
 }
