@@ -13,14 +13,14 @@ import android.widget.EditText
  class QuestionInput (){
 
     companion object {
-         fun hasText(userQuestionTextBox: EditText): Boolean {
-            return !userQuestionTextBox.text.toString().isEmpty()
+         private fun hasText(userQuestionTextBox: EditText): Boolean {
+            return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
         fun getUserInput(userQuestionTextBox: EditText): String {
             var retVal = ""
 
-            if (Companion.hasText(userQuestionTextBox)) {
+            if (hasText(userQuestionTextBox)) {
                 retVal = userQuestionTextBox.text.toString()
             }
 
