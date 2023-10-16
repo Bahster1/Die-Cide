@@ -17,17 +17,22 @@ class Response {
     fun getResponse(question: String, diceResult: Int): String? = runBlocking {
         val apiKey = "INSERT_API_KEY_HERE"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
+        var systemMessage = ""
+
+        when(diceResult) {
+            10 -> systemMessage = "You are a helpful decision making assistant. Make a decision based on the first number provided, if the number is above 10 say yes, if it is below say no. Give a reason why without saying what the number provided was. Do not mention whether the number is above or below 10. Do not mention the number provided."
+        }
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-3.5-turbo"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
-                    content = "You are a helpful decision making assistant. Make a decision based on the first number provided, if the number is above 10 say yes, if it is below say no. Give a reason why without saying what the number provided was. Do not mention whether the number is above or below 10. Do not mention the number provided."
+                    content = systemMessage
                 ),
                 ChatMessage(
                     role = ChatRole.User,
-                    content = "$diceResult $question"
+                    content = question
                 )
             )
         )
