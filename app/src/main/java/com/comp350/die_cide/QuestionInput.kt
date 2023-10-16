@@ -9,11 +9,8 @@
 package com.comp350.die_cide
 
 import android.widget.EditText
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 
-class QuestionInput (){
-     // lateinit var micImage: ImageView
+ class QuestionInput (){
 
     companion object {
 

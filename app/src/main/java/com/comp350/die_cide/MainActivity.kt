@@ -7,54 +7,33 @@
 package com.comp350.die_cide
 
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
-import com.comp350.die_cide.QuestionInput.Companion.setUpSpeechToText
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
-    private lateinit var questionField : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
+        // initialize variables for viewing the main app screen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponse = findViewById(R.id.textView6)
 
-
+        // initialize variables for dice image and value
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         var dieValue : Int
-        questionField = findViewById(R.id.userQuestion)
+        val questionField: EditText = findViewById(R.id.userQuestion)
         var userQuestion: String
         var response: String?
-        val micBtn: ImageView = findViewById(R.id.micImage)
-
-        micBtn.setOnClickListener{
-            questionField.text = null
-            var speechToTextIntent = setUpSpeechToText()
-            val result = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val results = result.data?.getStringArrayExtra(
-                        RecognizerIntent.EXTRA_RESULTS
-                    ) as ArrayList<String>
-
-                    questionField.setText(results[0])
-                }
-            }
-            result.launch(speechToTextIntent)
-        }
 
         // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
@@ -67,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
-                DiceLogic.playDiceAnimation(diceImage)   // DICE ANIMATION BLOCK
+                DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
