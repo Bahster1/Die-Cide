@@ -13,18 +13,23 @@ import android.widget.EditText
  class QuestionInput (){
 
     companion object {
+
+        // Returns True if the passed EditText element has text in it
+        // Returns False if the passed EditText element does not have text in it
          private fun hasText(userQuestionTextBox: EditText): Boolean {
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        fun getUserInput(userQuestionTextBox: EditText): String {
-            var retVal = ""
+        // Returns the text inside the passed EditText element as a string
+        // Returns an empty string if the passed EditText element does not have text in it
+        fun getUserQuestion(userQuestionTextBox: EditText): String {
+            var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                retVal = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox.text.toString()
             }
 
-            return retVal
+            return question
         }
     }
 }
