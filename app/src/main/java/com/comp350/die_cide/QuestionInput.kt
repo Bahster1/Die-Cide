@@ -9,8 +9,10 @@
 package com.comp350.die_cide
 
 import android.widget.EditText
+/*import android.widget.Toast
+import com.comp350.die_cide.DiceLogic.Companion.getApplicationContext*/
 
- class QuestionInput (){
+class QuestionInput (){
 
     companion object {
 
@@ -27,7 +29,9 @@ import android.widget.EditText
 
             if (hasText(userQuestionTextBox)) {
                 question = userQuestionTextBox.text.toString()
-            }
+            } /*else {
+                Toast.makeText(getApplicationContext(), "Please enter a question", Toast.LENGTH_SHORT).show()
+            }*/
 
             return question
         }
