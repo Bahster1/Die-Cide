@@ -8,53 +8,28 @@
 
 package com.comp350.die_cide
 
-import android.app.Activity
-import android.content.Intent
-import android.speech.RecognizerIntent
 import android.widget.EditText
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import com.comp350.die_cide.DiceLogic.Companion.registerForActivityResult
-import java.util.*
-/*import android.widget.Toast
-import com.comp350.die_cide.DiceLogic.Companion.getApplicationContext*/
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 
 class QuestionInput (){
+     // lateinit var micImage: ImageView
 
     companion object {
          private fun hasText(userQuestionTextBox: EditText): Boolean {
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        // SPEECH TO TEXT BLOCK
-        fun setUpSpeechToText(): Intent {
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            try {
-
-                intent.putExtra(
-                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                )
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say your question...")
-                //
-
-
-            } catch (e:Exception){
-                e.printStackTrace()
-            }
-            return intent
-
-        }
-
+        // Returns the text inside the passed EditText element as a string
+        // Returns an empty string if the passed EditText element does not have text in it
         fun getUserQuestion(userQuestionTextBox: EditText): String {
-            var retVal = ""
+            var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                retVal = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox.text.toString()
             }
 
-            return retVal
+            return question
         }
     }
 }
