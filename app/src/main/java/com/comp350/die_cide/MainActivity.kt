@@ -11,7 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.comp350.die_cide.QuestionInput.Companion.getUserInput
+import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponseDisplay: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // initialize variables for viewing the main app screen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
@@ -29,17 +31,19 @@ class MainActivity : AppCompatActivity() {
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         var diceValue : Int
         val questionField: EditText = findViewById(R.id.userQuestion)
-        var userQuestionInput: String
+        var userQuestion: String
         var openAIResponse: String?
 
         // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
             diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
             DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
-            userQuestionInput = getUserInput(questionField)
+            userQuestion = getUserQuestion(questionField)
+
+            // Enables dice animation to run throughout the duration of obtaining an OpenAI response
             CoroutineScope(Dispatchers.Main).launch {
                 openAIResponse = withContext(Dispatchers.IO) {
-                    Response().getResponse(userQuestionInput, diceValue)
+                    Response().getResponse(userQuestion, diceValue)
                 }
                 DiceLogic.displayDiceFace(diceImage, diceValue)
                 openAIResponseDisplay.text = openAIResponse
