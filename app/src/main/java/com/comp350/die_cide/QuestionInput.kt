@@ -16,6 +16,9 @@ class QuestionInput (){
      // lateinit var micImage: ImageView
 
     companion object {
+
+        // Returns True if the passed EditText element has text in it
+        // Returns False if the passed EditText element does not have text in it
          private fun hasText(userQuestionTextBox: EditText): Boolean {
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
