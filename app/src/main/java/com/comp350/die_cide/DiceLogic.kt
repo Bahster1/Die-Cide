@@ -14,11 +14,11 @@ class DiceLogic {
 
     companion object : AppCompatActivity() {
         // LOGIC BLOCK
-        private var dieValue = 0
+        private var diceValue = 0
 
         fun roll(): Int {
-            dieValue = (1..20).random()
-            return dieValue
+            diceValue = (1..20).random()
+            return diceValue
         }
 
         // ANIMATION BLOCK
@@ -33,9 +33,9 @@ class DiceLogic {
         }
 
         // call when we have a response from openai
-        fun displayDiceFace(diceImage : ImageView , dieValue : Int) {
+        fun displayDiceFace(diceImage : ImageView , diceValue : Int) {
             diceAnimation?.stop()
-            when (dieValue) {
+            when (diceValue) {
                 1 -> diceImage.setImageResource(R.drawable.dice_1)
                 2 -> diceImage.setImageResource(R.drawable.dice_2)
                 3 -> diceImage.setImageResource(R.drawable.dice_3)

@@ -14,7 +14,7 @@ import com.aallam.openai.client.OpenAI
 import kotlinx.coroutines.runBlocking
 
 class Response {
-    fun response(question: String, diceResult: Int): String? = runBlocking {
+    fun getResponse(question: String, diceResult: Int): String? = runBlocking {
         val apiKey = "INSERT_API_KEY_HERE"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
 

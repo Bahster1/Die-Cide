@@ -18,31 +18,31 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var openAIResponse: TextView
+    private lateinit var openAIResponseDisplay: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        openAIResponse = findViewById(R.id.textView6)
+        openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
 
         // initialize variables for dice image and value
         val diceImage: ImageView = findViewById(R.id.diceBtn)
-        var dieValue : Int
+        var diceValue : Int
         val questionField: EditText = findViewById(R.id.userQuestion)
         var userQuestionInput: String
-        var response: String?
+        var openAIResponse: String?
 
         // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
-            dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
+            diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
             DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
             userQuestionInput = getUserInput(questionField)
             CoroutineScope(Dispatchers.Main).launch {
-                response = withContext(Dispatchers.IO) {
-                    Response().response(userQuestionInput, dieValue)
+                openAIResponse = withContext(Dispatchers.IO) {
+                    Response().getResponse(userQuestionInput, diceValue)
                 }
-                DiceLogic.displayDiceFace(diceImage, dieValue)
-                openAIResponse.text = response
+                DiceLogic.displayDiceFace(diceImage, diceValue)
+                openAIResponseDisplay.text = openAIResponse
             }
         }
     }

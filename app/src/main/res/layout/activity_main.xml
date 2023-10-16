@@ -89,7 +89,7 @@
         app:layout_constraintTop_toBottomOf="@id/MiddleConstraintLayout">
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/OpenAIResponse"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:autoSizeTextType="uniform"
