@@ -29,9 +29,7 @@ class QuestionInput (){
 
             if (hasText(userQuestionTextBox)) {
                 question = userQuestionTextBox.text.toString()
-            } /*else {
-                Toast.makeText(getApplicationContext(), "Please enter a question", Toast.LENGTH_SHORT).show()
-            }*/
+            }
 
             return question
         }
