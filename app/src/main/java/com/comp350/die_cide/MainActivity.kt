@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,18 +37,27 @@ class MainActivity : AppCompatActivity() {
 
         // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
-            dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
-            DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
             userQuestion = getUserQuestion(questionField)
 
-            // Enables dice animation to run throughout the duration of obtaining an OpenAI response
-            CoroutineScope(Dispatchers.Main).launch {
-                response = withContext(Dispatchers.IO) {
-                    Response().response(userQuestion, dieValue)
+            // If the question field has no text or is entirely whitespace, a snackbar message appears at the bottom of the screen telling the user to enter a question
+            // Otherwise, the dice rolls and a response from OpenAI is obtained
+            if (userQuestion.isBlank()) {
+                Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
+
+            } else {
+                dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
+                DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
+
+                // Enables dice animation to run throughout the duration of obtaining an OpenAI response
+                CoroutineScope(Dispatchers.Main).launch {
+                    response = withContext(Dispatchers.IO) {
+                        Response().response(userQuestion, dieValue)
+                    }
+                    DiceLogic.displayDiceFace(diceImage, dieValue)
+                    openAIResponse.text = response
                 }
-                DiceLogic.displayDiceFace(diceImage, dieValue)
-                openAIResponse.text = response
             }
+
         }
     }
 }
