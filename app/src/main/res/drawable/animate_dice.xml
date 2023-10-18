@@ -63,4 +63,5 @@
     <item
         android:drawable="@drawable/dice_20"
         android:duration="100"/>
+
 </animation-list>

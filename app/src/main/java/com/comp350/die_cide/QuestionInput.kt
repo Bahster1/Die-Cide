@@ -9,8 +9,11 @@
 package com.comp350.die_cide
 
 import android.widget.EditText
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 
- class QuestionInput (){
+class QuestionInput (){
+     // lateinit var micImage: ImageView
 
     companion object {
          private fun hasText(userQuestionTextBox: EditText): Boolean {

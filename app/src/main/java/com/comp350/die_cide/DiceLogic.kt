@@ -5,6 +5,7 @@
 package com.comp350.die_cide
 
 import android.graphics.drawable.AnimationDrawable
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -14,28 +15,35 @@ class DiceLogic {
 
     companion object : AppCompatActivity() {
         // LOGIC BLOCK
-        private var dieValue = 0
+        private var diceValue = 0
 
         fun roll(): Int {
-            dieValue = (1..20).random()
-            return dieValue
+            diceValue = (1..20).random()
+            return diceValue
         }
 
         // ANIMATION BLOCK
         private var diceAnimation: AnimationDrawable? = null
+
         // animate dice for indefinite amount of time
-        fun onPlay(diceImage : ImageView) {
-            diceImage.setImageResource(androidx.appcompat.R.drawable.abc_control_background_material)
-            diceImage.setBackgroundResource(R.drawable.animate_dice)
-            diceAnimation = diceImage.background as AnimationDrawable
-            diceAnimation?.isOneShot = false
+        fun playDiceAnimation(diceImage : ImageView) {
+            setUpDiceEnvironment(diceImage)
             diceAnimation?.start()
         }
 
+        private fun setUpDiceEnvironment(diceImage: ImageView){
+            // Dice image is replaced with transparent Android Studio drawable...
+            diceImage.setImageResource(androidx.appcompat.R.drawable.abc_control_background_material)
+            // ...then the background is set to a drawable that goes through the dice faces.
+            diceImage.setBackgroundResource(R.drawable.animate_dice)
+            diceAnimation = diceImage.background as AnimationDrawable
+            diceAnimation?.isOneShot = false
+        }
+
         // call when we have a response from openai
-        fun displayDiceFace(diceImage : ImageView , dieValue : Int) {
+        fun displayDiceFace(diceImage : ImageView , diceValue : Int) {
             diceAnimation?.stop()
-            when (dieValue) {
+            when (diceValue) {
                 1 -> diceImage.setImageResource(R.drawable.dice_1)
                 2 -> diceImage.setImageResource(R.drawable.dice_2)
                 3 -> diceImage.setImageResource(R.drawable.dice_3)
@@ -58,6 +66,8 @@ class DiceLogic {
                 20 -> diceImage.setImageResource(R.drawable.dice_20)
             }
         }
+
+
     }
 }
 
