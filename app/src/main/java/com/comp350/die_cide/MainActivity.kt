@@ -12,6 +12,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserInput
+import com.comp350.die_cide.data.Interaction
+import com.comp350.die_cide.data.InteractionDao
+import com.comp350.die_cide.data.InteractionRoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +22,15 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
+    private lateinit var db: InteractionRoomDatabase
+    private lateinit var interactionDao: InteractionDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponse = findViewById(R.id.textView6)
+        db = InteractionRoomDatabase.getDatabase(this)
+        interactionDao = db.interactionDao()
 
         // initialize variables for dice image and value
         val diceImage: ImageView = findViewById(R.id.diceBtn)
@@ -43,6 +50,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 DiceLogic.displayDiceFace(diceImage, dieValue)
                 openAIResponse.text = response
+
+                var interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
+                interactionDao.insert((interaction))
             }
         }
     }

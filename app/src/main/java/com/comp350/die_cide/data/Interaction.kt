@@ -4,14 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "response")
-data class Response (
+@Entity(tableName = "interaction")
+data class Interaction (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
     @ColumnInfo(name = "question")
     val question: String,
 
+    @ColumnInfo(name = "number")
+    val number: Int,
+
     @ColumnInfo(name = "answer")
-    val answer: String
+    val answer: String?
 )

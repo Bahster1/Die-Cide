@@ -5,23 +5,23 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Response::class], version = 1, exportSchema = false)
-abstract class ResponseRoomDatabase : RoomDatabase() {
-    abstract fun responseDao(): ResponseDao
+@Database(entities = [Interaction::class], version = 1, exportSchema = false)
+abstract class InteractionRoomDatabase : RoomDatabase() {
+    abstract fun interactionDao(): InteractionDao
 
     companion object
     {
         @Volatile
-        private var INSTANCE: ResponseRoomDatabase? = null
+        private var INSTANCE: InteractionRoomDatabase? = null
 
-        fun getDatabase(context: Context): ResponseRoomDatabase
+        fun getDatabase(context: Context): InteractionRoomDatabase
         {
             return INSTANCE ?: synchronized(this)
             {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    ResponseRoomDatabase::class.java,
-                    "response_database"
+                    InteractionRoomDatabase::class.java,
+                    "interaction_database"
                 )
                     .fallbackToDestructiveMigration()
                     .build()
