@@ -20,7 +20,7 @@ class QuestionInput (){
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        fun getUserInput(userQuestionTextBox: EditText): String {
+        fun getUserQuestion(userQuestionTextBox: EditText): String {
             var retVal = ""
 
             if (hasText(userQuestionTextBox)) {
