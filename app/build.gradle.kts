@@ -36,12 +36,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
 
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -55,7 +55,9 @@ repositories {
 }
 
 dependencies {
-
+    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
     implementation("com.aallam.openai:openai-client:3.4.2")
     implementation("io.ktor:ktor-client-okhttp:2.3.4")
     implementation("androidx.core:core-ktx:1.9.0")
