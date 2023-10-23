@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
-                DiceLogic.onPlay(diceImage)   // DICE ANIMATION BLOCK
+                DiceLogic.playDiceAnimation(diceImage)   // DICE ANIMATION BLOCK
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {

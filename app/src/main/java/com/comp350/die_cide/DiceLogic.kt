@@ -5,7 +5,6 @@
 package com.comp350.die_cide
 
 import android.graphics.drawable.AnimationDrawable
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
