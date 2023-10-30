@@ -6,12 +6,15 @@
 */
 package com.comp350.die_cide
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
 import com.google.android.material.snackbar.Snackbar
@@ -19,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
@@ -41,22 +44,10 @@ class MainActivity : AppCompatActivity() {
         val micBtn: ImageView = findViewById(R.id.micImage)
 
         micBtn.setOnClickListener{
-
-            /* VERSION 1
             questionField.text = null
-            var speechToTextIntent = setUpSpeechToText()
-            val result = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val results = result.data?.getStringArrayExtra(
-                        RecognizerIntent.EXTRA_RESULTS
-                    ) as ArrayList<String>
-
-                    questionField.setText(results[0])
-                }
-            }
-            result.launch(speechToTextIntent)
-             */
+            startSpeechToText()
         }
+
 
         diceImage.setOnClickListener {
             userQuestion = getUserQuestion(questionField)
@@ -78,6 +69,32 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+        }
+    }
+
+    // SPEECH TO TEXT BLOCK
+    // 10/30/23 - This will be implemented in QuestionInput.kt later and cleaned up. For the
+    // sprint demo, I assumed working code is better than clean code FOR NOW.
+    private fun startSpeechToText() {
+        val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
+
+        try {
+            startActivityForResult(speechIntent, 1)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, "Speech recognition not available on this device", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (result != null && result.isNotEmpty()) {
+                val spokenText = result[0]
+                questionField.setText(spokenText)
+            }
         }
     }
 }
