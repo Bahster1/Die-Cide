@@ -14,7 +14,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
-import com.comp350.die_cide.QuestionInput.Companion.setUpSpeechToText
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         val micBtn: ImageView = findViewById(R.id.micImage)
 
         micBtn.setOnClickListener{
+
+            /* VERSION 1
             questionField.text = null
             var speechToTextIntent = setUpSpeechToText()
             val result = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -54,20 +55,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             result.launch(speechToTextIntent)
+             */
         }
 
-        // Actions to occur once dice is clicked on
         diceImage.setOnClickListener {
             userQuestion = getUserQuestion(questionField)
 
-            // If the question field has no text or is entirely whitespace, a snackbar message appears at the bottom of the screen telling the user to enter a question
-            // Otherwise, the dice rolls and a response from OpenAI is obtained
             if (userQuestion.isBlank()) {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
 
             } else {
                 dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
-                DiceLogic.playDiceAnimation(diceImage)   // DICE ANIMATION BLOCK
+                DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
