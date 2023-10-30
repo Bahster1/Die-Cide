@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // initialize variables for viewing the main app screen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponse = findViewById(R.id.textView6)
