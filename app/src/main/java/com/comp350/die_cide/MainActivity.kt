@@ -3,10 +3,13 @@
 
     * Copyright 2023 Ron Vincent V. Aspuria III
     * Copyright 2023 Taylor Asplund
+    * Copyright 2023 Bradley Walsh
 */
 package com.comp350.die_cide
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,10 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
     private lateinit var db: InteractionRoomDatabase
     private lateinit var interactionDao: InteractionDao
+    private lateinit var interaction: Interaction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         openAIResponse = findViewById(R.id.textView6)
         db = InteractionRoomDatabase.getDatabase(this)
         interactionDao = db.interactionDao()
@@ -51,9 +56,24 @@ class MainActivity : AppCompatActivity() {
                 DiceLogic.displayDiceFace(diceImage, dieValue)
                 openAIResponse.text = response
 
-                var interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
+                interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
                 interactionDao.insert((interaction))
             }
         }
+    }
+
+    // https://www.geeksforgeeks.org/how-to-create-option-menu-in-android-using-kotlin/
+    // https://www.youtube.com/watch?v=oh4YOj9VkVE
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            // do something here about it
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

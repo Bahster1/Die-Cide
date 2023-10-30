@@ -22,6 +22,6 @@ interface InteractionDao {
     @Query("SELECT * FROM interaction WHERE id = :id")
     fun getInteraction(id: Int): Flow<Interaction>
 
-    @Query("SELECT * FROM interaction ORDER BY question ASC")
+    @Query("SELECT * FROM interaction ORDER BY id ASC")
     fun getInteractions(): Flow<List<Interaction>>
 }
