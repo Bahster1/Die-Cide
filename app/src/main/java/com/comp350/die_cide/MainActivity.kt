@@ -11,10 +11,8 @@ import android.speech.RecognizerIntent
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
-import com.comp350.die_cide.QuestionInput.Companion.setUpSpeechToText
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +22,6 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
-    private lateinit var questionField : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -36,12 +33,14 @@ class MainActivity : AppCompatActivity() {
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         var dieValue : Int
-        questionField = findViewById(R.id.userQuestion)
+        var questionField : EditText = findViewById(R.id.userQuestion)
         var userQuestion: String
         var response: String?
         val micBtn: ImageView = findViewById(R.id.micImage)
 
         micBtn.setOnClickListener{
+
+            /* VERSION 1
             questionField.text = null
             var speechToTextIntent = setUpSpeechToText()
             val result = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -54,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             result.launch(speechToTextIntent)
+             */
         }
 
         // Actions to occur once dice is clicked on
@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage)   // DICE ANIMATION BLOCK
+                //TODO: diceImage.animate().rotation(1080f).setDuration(1000).start()
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {

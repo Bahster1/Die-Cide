@@ -27,6 +27,9 @@ class QuestionInput (){
          }
 
         // SPEECH TO TEXT BLOCK
+        //TODO: Will complete later (I know this is bad lol)
+
+        /* VERSION 1
         fun setUpSpeechToText(): Intent {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             try {
@@ -46,15 +49,15 @@ class QuestionInput (){
             return intent
 
         }
-
+        */
         fun getUserQuestion(userQuestionTextBox: EditText): String {
-            var retVal = ""
+            var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                retVal = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox.text.toString()
             }
 
-            return retVal
+            return question
         }
     }
 }
