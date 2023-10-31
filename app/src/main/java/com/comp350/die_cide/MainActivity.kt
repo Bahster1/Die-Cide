@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         diceImage.setOnClickListener {
             userQuestion = getUserQuestion(questionField)
 
+
             if (userQuestion.isBlank()) {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
 
@@ -94,7 +95,9 @@ class MainActivity : AppCompatActivity() {
             if (result != null && result.isNotEmpty()) {
                 val spokenText = result[0]
                 questionField.setText(spokenText)
+
             }
+
         }
     }
 }
