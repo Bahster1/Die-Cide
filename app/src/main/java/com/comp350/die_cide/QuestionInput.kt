@@ -8,6 +8,7 @@
 
 package com.comp350.die_cide
 
+
 import android.widget.EditText
 /*import android.widget.Toast
 import com.comp350.die_cide.DiceLogic.Companion.getApplicationContext*/
@@ -22,8 +23,9 @@ class QuestionInput (){
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        // Returns the text inside the passed EditText element as a string
-        // Returns an empty string if the passed EditText element does not have text in it
+
+        // SPEECH TO TEXT BLOCK
+
         fun getUserQuestion(userQuestionTextBox: EditText): String {
             var question = ""
 
