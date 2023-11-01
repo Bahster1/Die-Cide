@@ -8,23 +8,32 @@
 
 package com.comp350.die_cide
 
-import android.widget.EditText
 
- class QuestionInput (){
+import android.widget.EditText
+/*import android.widget.Toast
+import com.comp350.die_cide.DiceLogic.Companion.getApplicationContext*/
+
+class QuestionInput (){
 
     companion object {
+
+        // Returns True if the passed EditText element has text in it
+        // Returns False if the passed EditText element does not have text in it
          private fun hasText(userQuestionTextBox: EditText): Boolean {
             return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        fun getUserInput(userQuestionTextBox: EditText): String {
-            var retVal = ""
+
+        // SPEECH TO TEXT BLOCK
+
+        fun getUserQuestion(userQuestionTextBox: EditText): String {
+            var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                retVal = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox.text.toString()
             }
 
-            return retVal
+            return question
         }
     }
 }
