@@ -10,10 +10,8 @@ package com.comp350.die_cide
 
 
 import android.widget.EditText
-/*import android.widget.Toast
-import com.comp350.die_cide.DiceLogic.Companion.getApplicationContext*/
 
-class QuestionInput (){
+ class QuestionInput{
 
     companion object {
 

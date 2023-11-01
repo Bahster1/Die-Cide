@@ -32,9 +32,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class MainActivity : AppCompatActivity() {
-    private lateinit var openAIResponse: TextView
+
+    private lateinit var openAIResponseDisplay: TextView
     private lateinit var db: InteractionRoomDatabase
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
@@ -45,17 +45,17 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        openAIResponse = findViewById(R.id.textView6)
+        openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
         db = InteractionRoomDatabase.getDatabase(this)
         interactionDao = db.interactionDao()
 
 
+
         val diceImage: ImageView = findViewById(R.id.diceBtn)
-        var dieValue : Int
+        var diceValue : Int
         questionField = findViewById(R.id.userQuestion)
         var userQuestion: String
-        var response: String?
+        var openAIResponse: String?
         val micBtn: ImageView = findViewById(R.id.micImage)
 
         micBtn.setOnClickListener{
@@ -72,16 +72,18 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
 
             } else {
-                dieValue = DiceLogic.roll()   // DICE LOGIC BLOCK
+                diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
-                    response = withContext(Dispatchers.IO) {
-                        Response().response(userQuestion, dieValue)
+                    openAIResponse = withContext(Dispatchers.IO) {
+                        Response().getResponse(userQuestion, diceValue)
                     }
-                    DiceLogic.displayDiceFace(diceImage, dieValue)
-                    openAIResponse.text = response
+
+                    DiceLogic.displayDiceFace(diceImage, diceValue)
+                    openAIResponseDisplay.text = openAIResponse
+
                   
                     interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
                     interactionDao.insert((interaction))
@@ -109,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            if (result != null && result.isNotEmpty()) {
+            if (!result.isNullOrEmpty()) {
                 val spokenText = result[0]
                 questionField.setText(spokenText)
 
