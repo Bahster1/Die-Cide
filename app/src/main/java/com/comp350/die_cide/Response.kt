@@ -15,7 +15,7 @@ import kotlinx.coroutines.runBlocking
 
 class Response {
     fun getResponse(question: String, diceResult: Int): String? = runBlocking {
-        val apiKey = "INSERT_API_KEY_HERE"
+        val apiKey = "INSERT API KEY HERE"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
 
         var systemMessage = ""
