@@ -1,11 +1,20 @@
 /*
     * Morgan's Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
-
+    * Bradley's Room DB Reference: https://developer.android.com/codelabs/android-room-with-a-view-kotlin#0
+    *
     * Copyright 2023 Ron Vincent V. Aspuria III
     * Copyright 2023 Taylor Asplund
+    * Copyright 2023 Bradley Walsh
 */
 package com.comp350.die_cide
 
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.viewModels
+import com.comp350.die_cide.QuestionInput.Companion.getUserInput
+import com.comp350.die_cide.data.Interaction
+import com.comp350.die_cide.data.InteractionDao
+import com.comp350.die_cide.data.InteractionRoomDatabase
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -26,6 +35,9 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var openAIResponse: TextView
+    private lateinit var db: InteractionRoomDatabase
+    private lateinit var interactionDao: InteractionDao
+    private lateinit var interaction: Interaction
     private lateinit var questionField : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +45,10 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         openAIResponse = findViewById(R.id.textView6)
+        db = InteractionRoomDatabase.getDatabase(this)
+        interactionDao = db.interactionDao()
 
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
@@ -67,9 +82,11 @@ class MainActivity : AppCompatActivity() {
                     }
                     DiceLogic.displayDiceFace(diceImage, dieValue)
                     openAIResponse.text = response
+                  
+                    interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
+                    interactionDao.insert((interaction))
                 }
             }
-
         }
     }
 
@@ -99,5 +116,18 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
