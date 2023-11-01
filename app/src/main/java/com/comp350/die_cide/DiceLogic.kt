@@ -9,7 +9,6 @@ import android.graphics.drawable.AnimationDrawable
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
-// This is be the main view model file that will effect the view which is (activity_main.xml)
 
 class DiceLogic {
 
