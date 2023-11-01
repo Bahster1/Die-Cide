@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:textAlignment="center"
     tools:content="DiceLogic"
-    android:textAlignment="center">
+    tools:context=".MainActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,27 +19,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/appTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-black"
-            android:text="@string/title"
-            android:textAlignment="center"
-            android:textSize="34sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.513"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.183" />
-
         <EditText
             android:id="@+id/userQuestion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="291dp"
+            android:layout_height="52dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="@string/text_enter_prompt"
@@ -54,9 +37,23 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appTitle"
-            app:layout_constraintVertical_bias="0.13" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.708" />
+
+        <ImageView
+            android:id="@+id/micImage"
+            android:layout_width="60dp"
+            android:layout_height="44dp"
+            android:contentDescription="A mic icon for Speech-To-text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.991"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.72"
+            app:srcCompat="@android:drawable/presence_audio_online" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,13 +70,13 @@
             android:id="@+id/diceBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="A 20 sided dice you can roll to help you decide!"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/dice_20"
-            android:contentDescription="A 20 sided dice you can roll to help you decide!"/>
+            app:srcCompat="@drawable/dice_20" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,7 +89,7 @@
         app:layout_constraintTop_toBottomOf="@id/MiddleConstraintLayout">
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/OpenAIResponse"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:autoSizeTextType="uniform"

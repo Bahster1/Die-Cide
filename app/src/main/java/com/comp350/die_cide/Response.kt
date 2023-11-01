@@ -14,20 +14,45 @@ import com.aallam.openai.client.OpenAI
 import kotlinx.coroutines.runBlocking
 
 class Response {
-    fun response(question: String, diceResult: Int): String? = runBlocking {
-        val apiKey = "INSERT API KEY"
+    fun getResponse(question: String, diceResult: Int): String? = runBlocking {
+        val apiKey = "INSERT API KEY HERE"
         val openAI = OpenAI(token = apiKey, logging = LoggingConfig(LogLevel.None))
 
+        var systemMessage = ""
+
+        when(diceResult) {
+            1 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a sarcastic tone. If the answer is a close-ended question, your decision  will be no."
+            2 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a sarcastic tone. If the answer is a close-ended question, your decision  will be no."
+            3 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a sarcastic tone. If the answer is a close-ended question, your decision  will be no."
+            4 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a pessimistic tone. If the answer is a close-ended question, your decision  will be no."
+            5 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a pessimistic tone. If the answer is a close-ended question, your decision  will be no."
+            6 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a pessimistic tone. If the answer is a close-ended question, your decision  will be no."
+            7 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a critical tone. If the answer is a close-ended question, your decision  will be no."
+            8 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a critical tone. If the answer is a close-ended question, your decision  will be no."
+            9 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a formal tone. If the answer is a close-ended question, your decision  will be no."
+            10 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a formal tone. If the answer is a close-ended question, your decision  will be no."
+            11 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a formal tone. If the answer is a close-ended question, your decision  will be yes."
+            12 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a friendly tone. If the answer is a close-ended question, your decision  will be yes."
+            13 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a friendly tone. If the answer is a close-ended question, your decision  will be yes."
+            14 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a friendly tone. If the answer is a close-ended question, your decision  will be yes."
+            15 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a optimistic tone. If the answer is a close-ended question, your decision  will be yes."
+            16 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a optimistic tone. If the answer is a close-ended question, your decision  will be yes."
+            17 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Respond in a optimistic tone. If the answer is a close-ended question, your decision  will be yes."
+            18 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Be a hype man in your response. If the answer is a close-ended question, your decision  will be yes."
+            19 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Be a hype man in your response. If the answer is a close-ended question, your decision  will be yes."
+            20 -> systemMessage = "You are a helpful assistant. You are required to make a decision and give a short reason to explain why you decided your decision. Do not give a preamble to your decision reasoning. Say your decision and reason together. Be a hype man in your response. If the answer is a close-ended question, your decision  will be yes."
+        }
+
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-3.5-turbo"),
+            model = ModelId("gpt-4"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
-                    content = "You are a helpful decision making assistant. Make a decision based on the first number provided, if the number is above 10 say yes, if it is below say no. Give a reason why without saying what the number provided was. Do not mention whether the number is above or below 10. Do not mention the number provided."
+                    content = systemMessage
                 ),
                 ChatMessage(
                     role = ChatRole.User,
-                    content = "$diceResult $question"
+                    content = question
                 )
             )
         )
