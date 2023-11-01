@@ -4,11 +4,12 @@
 package com.comp350.die_cide.data
 
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Interaction::class], version = 1, exportSchema = false)
+@Database(entities = arrayOf(Interaction::class), version = 1, exportSchema = false)
 abstract class InteractionRoomDatabase : RoomDatabase() {
     abstract fun interactionDao(): InteractionDao
 
@@ -26,12 +27,11 @@ abstract class InteractionRoomDatabase : RoomDatabase() {
                     InteractionRoomDatabase::class.java,
                     "interaction_database"
                 )
-                    .fallbackToDestructiveMigration()
                     .build()
 
                 INSTANCE = instance
 
-                return instance
+                instance
             }
         }
     }

@@ -1,29 +1,36 @@
 /*
+    * Bradley's ActionBar reference: https://developer.android.com/codelabs/android-room-with-a-view-kotlin#0
     * Copyright 2023 Bradley Walsh
  */
 package com.comp350.die_cide
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.comp350.die_cide.data.InteractionRoomDatabase
 
 class HistoryActivity : AppCompatActivity() {
-    private lateinit var db: InteractionRoomDatabase
+    private val historyViewModel: HistoryViewModel by viewModels {
+        HistoryViewModelFactory((application as DieCideApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.history_main)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        db = InteractionRoomDatabase.getDatabase(this)
-//        val historyAdapter = HistoryAdapter(db.interactionDao().getInteractions())
-//        val recyclerView: RecyclerView = findViewById(R.id.historyRecyclerView)
-//        recyclerView.adapter = historyAdapter
+        val recyclerView: RecyclerView = findViewById(R.id.historyRecyclerView)
+        val adapter = HistoryAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        historyViewModel.allInteractions.observe(this) { interactions ->
+            interactions.let { adapter.submitList(it) }
+        }
     }
 
-    // https://devofandroid.blogspot.com/2018/03/add-back-button-to-action-bar-android.html
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

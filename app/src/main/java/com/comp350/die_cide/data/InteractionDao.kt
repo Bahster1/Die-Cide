@@ -16,14 +16,8 @@ interface InteractionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(interaction: Interaction)
 
-    @Update
-    suspend fun update(interaction: Interaction)
-
-    @Delete
-    suspend fun delete(interaction: Interaction)
-
-    @Query("SELECT * FROM interaction WHERE id = :id")
-    fun getInteraction(id: Int): Flow<Interaction>
+    @Query("DELETE FROM interaction")
+    fun deleteAll()
 
     @Query("SELECT * FROM interaction ORDER BY id ASC")
     fun getInteractions(): Flow<List<Interaction>>

@@ -1,6 +1,7 @@
 /*
     * Morgan's Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
-
+    * Bradley's Room DB Reference: https://developer.android.com/codelabs/android-room-with-a-view-kotlin#0
+    *
     * Copyright 2023 Ron Vincent V. Aspuria III
     * Copyright 2023 Taylor Asplund
     * Copyright 2023 Bradley Walsh
@@ -14,6 +15,7 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.comp350.die_cide.QuestionInput.Companion.getUserInput
 import com.comp350.die_cide.data.Interaction
@@ -63,14 +65,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // https://www.geeksforgeeks.org/how-to-create-option-menu-in-android-using-kotlin/
-    // https://www.youtube.com/watch?v=oh4YOj9VkVE
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    // https://stackoverflow.com/questions/64418590/how-to-navigate-to-a-specific-activity-in-android-kotlin
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))

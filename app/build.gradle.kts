@@ -57,6 +57,7 @@ repositories {
 
 dependencies {
     val room_version = "2.5.2"
+    val lifecycle_version = "2.6.2"
 
     implementation("com.aallam.openai:openai-client:3.4.2")
     implementation("io.ktor:ktor-client-okhttp:2.3.4")
@@ -80,4 +81,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
 }
