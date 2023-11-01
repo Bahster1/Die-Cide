@@ -10,14 +10,14 @@ package com.comp350.die_cide
 
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
-import com.comp350.die_cide.QuestionInput.Companion.getUserInput
 import com.comp350.die_cide.data.Interaction
 import com.comp350.die_cide.data.InteractionDao
 import com.comp350.die_cide.data.InteractionRoomDatabase
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.EditText
@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.view.inputmethod.InputMethodManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
     private lateinit var questionField : EditText
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         var openAIResponse: String?
         val micBtn: ImageView = findViewById(R.id.micImage)
 
+
         micBtn.setOnClickListener{
             questionField.text = null
             startSpeechToText()
@@ -72,8 +73,13 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
 
             } else {
+                hideKeyboard()
+//                val mediaPlayer = MediaPlayer.create(this,R.raw.rolling_dice_sfx)
+//                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
+
+
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
@@ -85,9 +91,11 @@ class MainActivity : AppCompatActivity() {
                     openAIResponseDisplay.text = openAIResponse
 
                   
-                    interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
+                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
                     interactionDao.insert((interaction))
                 }
+
+//                mediaPlayer.release()
             }
         }
     }
@@ -106,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Speech recognition not available on this device", Toast.LENGTH_SHORT).show()
         }
     }
-
+    //Confirms use of startSpeechToText function
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
@@ -131,5 +139,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun hideKeyboard(){
+        val keyboardHider = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboardHider.hideSoftInputFromWindow(questionField.windowToken, 0)
     }
 }
