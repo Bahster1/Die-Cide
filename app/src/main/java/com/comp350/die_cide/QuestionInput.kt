@@ -8,23 +8,30 @@
 
 package com.comp350.die_cide
 
+
 import android.widget.EditText
 
- class QuestionInput (){
+ class QuestionInput{
 
     companion object {
-         fun hasText(userQuestionTextBox: EditText): Boolean {
-            return !userQuestionTextBox.text.toString().isEmpty()
+
+        // Returns True if the passed EditText element has text in it
+        // Returns False if the passed EditText element does not have text in it
+         private fun hasText(userQuestionTextBox: EditText): Boolean {
+            return userQuestionTextBox.text.toString().isNotEmpty()
          }
 
-        fun getUserInput(userQuestionTextBox: EditText): String {
-            var retVal = ""
 
-            if (Companion.hasText(userQuestionTextBox)) {
-                retVal = userQuestionTextBox.text.toString()
+        // SPEECH TO TEXT BLOCK
+
+        fun getUserQuestion(userQuestionTextBox: EditText): String {
+            var question = ""
+
+            if (hasText(userQuestionTextBox)) {
+                question = userQuestionTextBox.text.toString()
             }
 
-            return retVal
+            return question
         }
     }
 }

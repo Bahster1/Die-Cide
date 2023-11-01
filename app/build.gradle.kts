@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -36,12 +37,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
 
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -55,6 +56,8 @@ repositories {
 }
 
 dependencies {
+    val room_version = "2.5.2"
+    val lifecycle_version = "2.6.2"
 
     implementation("com.aallam.openai:openai-client:3.4.2")
     implementation("io.ktor:ktor-client-okhttp:2.3.4")
@@ -72,4 +75,13 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Room libraries
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
 }
