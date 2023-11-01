@@ -1,3 +1,6 @@
+/*
+    * Copyright 2023 Bradley Walsh
+ */
 package com.comp350.die_cide.data
 
 import android.content.Context

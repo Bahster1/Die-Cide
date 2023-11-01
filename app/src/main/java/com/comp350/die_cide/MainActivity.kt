@@ -7,6 +7,7 @@
 */
 package com.comp350.die_cide
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -69,9 +70,10 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    // https://stackoverflow.com/questions/64418590/how-to-navigate-to-a-specific-activity-in-android-kotlin
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            // do something here about it
+            R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
         }
 
         return super.onOptionsItemSelected(item)
