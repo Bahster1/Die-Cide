@@ -62,7 +62,6 @@ class DiceLogic {
 //        }
 
         fun playDiceAnimation(diceImage : ImageView, duration: Long) {
-            // TODO: TASK 4b
             setUpDiceEnvironment(diceImage)
             switchDiceFaceAnimation?.start()
 
@@ -70,7 +69,6 @@ class DiceLogic {
 //            faceAnimator.start()
             shouldContinueRotation = true
             rotateDice(diceImage)
-
         }
 
         private fun setUpDiceEnvironment(diceImage: ImageView){
@@ -138,11 +136,12 @@ class DiceLogic {
                 .start()
         }
 
-
-
-
-
-
+        fun checkIfDiceIsClickable(isDiceClickable: Boolean): Boolean{
+            if (isDiceRotating){
+                return !isDiceClickable
+            }
+            return isDiceClickable
+        }
     }
 }
 

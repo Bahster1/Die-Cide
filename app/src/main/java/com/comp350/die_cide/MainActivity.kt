@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
+        var isDiceClickable = true
         var diceValue : Int
         questionField = findViewById(R.id.userQuestion)
         var userQuestion: String
@@ -66,21 +67,22 @@ class MainActivity : AppCompatActivity() {
 
 
         diceImage.setOnClickListener {
+            isDiceClickable = true
+            isDiceClickable = DiceLogic.checkIfDiceIsClickable(isDiceClickable)
             userQuestion = getUserQuestion(questionField)
-
-
             if (userQuestion.isBlank()) {
+                hideKeyboard()
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
 
             } else {
+                while (!isDiceClickable){
+                    return@setOnClickListener
+                }
                 hideKeyboard()
 //                val mediaPlayer = MediaPlayer.create(this,R.raw.rolling_dice_sfx)
 //                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
-                // TODO: TASK 4b
-
-
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
