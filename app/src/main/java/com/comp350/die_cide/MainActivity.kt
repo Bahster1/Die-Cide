@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
 //                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
+                // TODO: TASK 4b
 
 
 

@@ -62,6 +62,7 @@ class DiceLogic {
 //        }
 
         fun playDiceAnimation(diceImage : ImageView, duration: Long) {
+            // TODO: TASK 4b
             setUpDiceEnvironment(diceImage)
             switchDiceFaceAnimation?.start()
 
