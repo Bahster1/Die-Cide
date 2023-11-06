@@ -33,6 +33,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.view.inputmethod.InputMethodManager
 
+// TODO LIST:
+// Make sure all necessary compose libraries are in the gradle files
+// Add new directories in "res" and "java/com/comp350/die_cide" to populate with new UI/UX data, in accordance with standard Jetpack Compose development
+// Make copies of existing Activities, which will house the converted code
+// Within the copies, convert existing code using XML to code using Jetpack Compose. This will also require making those new UI/UX data files/kotlin classes/etc. in the new directories
+// Rigorously test the converted code
+// Delete the old XML-based code once it is clear that the Jetpack Compose code works
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var openAIResponseDisplay: TextView
