@@ -32,12 +32,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.comp350.die_cide.ui.theme.DieCideTheme
 
 // TODO LIST:
-// Make sure all necessary compose libraries are in the gradle files
-// Add new directories in "res" and "java/com/comp350/die_cide" to populate with new UI/UX data, in accordance with standard Jetpack Compose development
-// Make copies of existing Activities, which will house the converted code
-// Within the copies, convert existing code using XML to code using Jetpack Compose. This will also require making those new UI/UX data files/kotlin classes/etc. in the new directories
+// [DONE]  Make sure all necessary compose libraries are in the gradle files
+// [DONE] Add new directories in "res" and "java/com/comp350/die_cide" to populate with new UI/UX data, in accordance with standard Jetpack Compose development
+// [DONE - Github takes care of this] Make copies of existing Activities, which will house the converted code
+// [IN PROGRESS] Within the copies, convert existing code using XML to code using Jetpack Compose. This will also require making those new UI/UX data files/kotlin classes/etc. in the new directories
 // Rigorously test the converted code
 // Delete the old XML-based code once it is clear that the Jetpack Compose code works
 
@@ -53,6 +57,12 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setContent {
+            DieCideTheme {
+                // A surface container using the 'background' color from the theme
+                MainScreenPreview()
+            }
+        }
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
         db = InteractionRoomDatabase.getDatabase(this)
         interactionDao = db.interactionDao()
@@ -111,6 +121,7 @@ class MainActivity : AppCompatActivity() {
     // SPEECH TO TEXT BLOCK
     // 10/30/23 - This will be implemented in QuestionInput.kt later and cleaned up. For the
     // sprint demo, I assumed working code is better than clean code FOR NOW.
+    // THIS WAS CHOSEN FOR CLASS COHESION - PUT THIS IN QuestionInput.kt or in a new class
     private fun startSpeechToText() {
         val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -152,5 +163,15 @@ class MainActivity : AppCompatActivity() {
     private fun hideKeyboard(){
         val keyboardHider = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboardHider.hideSoftInputFromWindow(questionField.windowToken, 0)
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun MainScreenPreview(){
+        MainScreen()
+    }
+    @Composable
+    fun MainScreen(){
+        // TODO: THIS WILL BE WHERE ALL UI ELEMENTS WILL GO
     }
 }
