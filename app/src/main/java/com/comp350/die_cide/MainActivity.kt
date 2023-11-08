@@ -10,8 +10,6 @@ package com.comp350.die_cide
 
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
-import com.comp350.die_cide.QuestionInput.Companion.getUserInput
 import com.comp350.die_cide.data.Interaction
 import com.comp350.die_cide.data.InteractionDao
 import com.comp350.die_cide.data.InteractionRoomDatabase
@@ -85,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                     openAIResponseDisplay.text = openAIResponse
 
                   
-                    interaction = Interaction(question = userQuestionInput, number = dieValue, answer = response)
+                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
                     interactionDao.insert((interaction))
                 }
             }
