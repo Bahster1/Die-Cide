@@ -44,7 +44,7 @@ class Response {
         }
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4"),
+            model = ModelId("gpt-4-1106-preview"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
