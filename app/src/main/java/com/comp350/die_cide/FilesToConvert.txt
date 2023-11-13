@@ -1,0 +1,14 @@
+Completed:
+    > <none>
+
+Testing in progress:
+    > <none>
+
+Conversion in progress:
+    > MainActivity (Ron)
+
+Needs conversion:
+    > DiceLogic
+    > HistoryActivity
+    > HistoryAdapter
+    > QuestionInput
