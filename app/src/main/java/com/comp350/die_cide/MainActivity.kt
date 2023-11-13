@@ -1,5 +1,6 @@
 /*
-    * Morgan's Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
+    * Morgan's EditTest Reference: https://www.geeksforgeeks.org/working-with-the-edittext-in-android/#
+    * Morgan's Composable EditText Reference: https://www.geeksforgeeks.org/edittext-in-android-using-jetpack-compose/#
     * Bradley's Room DB Reference: https://developer.android.com/codelabs/android-room-with-a-view-kotlin#0
     *
     * Copyright 2023 Ron Vincent V. Aspuria III
@@ -8,34 +9,35 @@
 */
 package com.comp350.die_cide
 
-import android.view.Menu
-import android.view.MenuItem
-import com.comp350.die_cide.data.Interaction
-import com.comp350.die_cide.data.InteractionDao
-import com.comp350.die_cide.data.InteractionRoomDatabase
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
+import com.comp350.die_cide.data.Interaction
+import com.comp350.die_cide.data.InteractionDao
+import com.comp350.die_cide.data.InteractionRoomDatabase
+import com.comp350.die_cide.ui.theme.DieCideTheme
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.view.inputmethod.InputMethodManager
-import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.comp350.die_cide.ui.theme.DieCideTheme
 
 // TODO LIST:
 // [DONE]  Make sure all necessary compose libraries are in the gradle files
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var db: InteractionRoomDatabase
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
-    private lateinit var questionField : EditText
+    private lateinit var questionField: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -68,16 +70,15 @@ class MainActivity : AppCompatActivity() {
         interactionDao = db.interactionDao()
 
 
-
         val diceImage: ImageView = findViewById(R.id.diceBtn)
-        var diceValue : Int
+        var diceValue: Int
         questionField = findViewById(R.id.userQuestion)
         var userQuestion: String
         var openAIResponse: String?
         val micBtn: ImageView = findViewById(R.id.micImage)
 
 
-        micBtn.setOnClickListener{
+        micBtn.setOnClickListener {
             questionField.text = null
             startSpeechToText()
         }
@@ -88,7 +89,11 @@ class MainActivity : AppCompatActivity() {
 
 
             if (userQuestion.isBlank()) {
-                Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    findViewById(R.id.MiddleConstraintLayout),
+                    "Please enter a question",
+                    Snackbar.LENGTH_SHORT
+                ).show()
 
             } else {
                 hideKeyboard()
@@ -96,7 +101,6 @@ class MainActivity : AppCompatActivity() {
 //                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
-
 
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
@@ -108,8 +112,12 @@ class MainActivity : AppCompatActivity() {
                     DiceLogic.displayDiceFace(diceImage, diceValue)
                     openAIResponseDisplay.text = openAIResponse
 
-                  
-                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
+
+                    interaction = Interaction(
+                        question = userQuestion,
+                        number = diceValue,
+                        answer = openAIResponse
+                    )
                     interactionDao.insert((interaction))
                 }
 
@@ -124,15 +132,23 @@ class MainActivity : AppCompatActivity() {
     // THIS WAS CHOSEN FOR CLASS COHESION - PUT THIS IN QuestionInput.kt or in a new class
     private fun startSpeechToText() {
         val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        speechIntent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
 
         try {
             startActivityForResult(speechIntent, 1)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "Speech recognition not available on this device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Speech recognition not available on this device",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
+
     //Confirms use of startSpeechToText function
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -160,18 +176,33 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         val keyboardHider = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboardHider.hideSoftInputFromWindow(questionField.windowToken, 0)
     }
 
     @Preview(showBackground = true)
     @Composable
-    fun MainScreenPreview(){
+    fun MainScreenPreview() {
         MainScreen()
     }
+
     @Composable
-    fun MainScreen(){
+    fun MainScreen() {
         // TODO: THIS WILL BE WHERE ALL UI ELEMENTS WILL GO
+        Column {
+            Text("Die-Cide")
+        }
     }
+
+    /*var text by rememberSaveable {
+        mutableStateOf("")
+    }
+    TextField(
+        value = text,
+        onValueChange = {text = it},
+        label = {Text("What do you need to decide?")},
+        singleLine = false
+    )*/
+
 }

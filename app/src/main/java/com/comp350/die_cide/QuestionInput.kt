@@ -8,7 +8,6 @@
 
 package com.comp350.die_cide
 
-
 import android.widget.EditText
 
  class QuestionInput{
