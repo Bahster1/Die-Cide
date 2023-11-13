@@ -17,7 +17,7 @@ interface InteractionDao {
     suspend fun insert(interaction: Interaction)
 
     @Query("DELETE FROM interaction")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM interaction ORDER BY id ASC")
     fun getInteractions(): Flow<List<Interaction>>

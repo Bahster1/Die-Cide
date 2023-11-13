@@ -18,6 +18,10 @@ class HistoryViewModel(private val repository: InteractionRepository): ViewModel
     fun insert(interaction: Interaction) = viewModelScope.launch {
         repository.insert(interaction)
     }
+
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAll()
+    }
 }
 
 class HistoryViewModelFactory(private val repository: InteractionRepository) : ViewModelProvider.Factory {

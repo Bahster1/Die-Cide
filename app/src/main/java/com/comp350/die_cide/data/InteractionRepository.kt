@@ -11,4 +11,10 @@ class InteractionRepository(private val interactionDao: InteractionDao) {
     suspend fun insert(interaction: Interaction) {
         interactionDao.insert((interaction))
     }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteAll() {
+        interactionDao.deleteAll()
+    }
 }

@@ -17,7 +17,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.EditText
@@ -40,16 +39,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
     private lateinit var questionField : EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
         db = InteractionRoomDatabase.getDatabase(this)
         interactionDao = db.interactionDao()
-
-
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         var diceValue : Int
@@ -58,28 +54,22 @@ class MainActivity : AppCompatActivity() {
         var openAIResponse: String?
         val micBtn: ImageView = findViewById(R.id.micImage)
 
-
-        micBtn.setOnClickListener{
+        micBtn.setOnClickListener {
             questionField.text = null
             startSpeechToText()
         }
 
-
         diceImage.setOnClickListener {
             userQuestion = getUserQuestion(questionField)
 
-
             if (userQuestion.isBlank()) {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
-
             } else {
                 hideKeyboard()
 //                val mediaPlayer = MediaPlayer.create(this,R.raw.rolling_dice_sfx)
 //                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
-
-
 
                 // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                 CoroutineScope(Dispatchers.Main).launch {
@@ -90,11 +80,9 @@ class MainActivity : AppCompatActivity() {
                     DiceLogic.displayDiceFace(diceImage, diceValue)
                     openAIResponseDisplay.text = openAIResponse
 
-                  
-                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
+                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse!!)
                     interactionDao.insert((interaction))
                 }
-
 //                mediaPlayer.release()
             }
         }
@@ -114,6 +102,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Speech recognition not available on this device", Toast.LENGTH_SHORT).show()
         }
     }
+
     //Confirms use of startSpeechToText function
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -124,12 +113,11 @@ class MainActivity : AppCompatActivity() {
                 questionField.setText(spokenText)
 
             }
-
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
