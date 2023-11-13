@@ -25,6 +25,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -190,8 +191,15 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun MainScreen() {
         // TODO: THIS WILL BE WHERE ALL UI ELEMENTS WILL GO
-        Column {
-            Text("Die-Cide")
+        Row {
+            // Title and Menu button
+        }
+        Row {
+            Column {
+                // Prompt field
+                // Dice image
+                // Response field
+            }
         }
     }
 
