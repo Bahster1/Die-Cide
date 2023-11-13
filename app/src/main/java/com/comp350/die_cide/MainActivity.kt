@@ -195,14 +195,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*var text by rememberSaveable {
-        mutableStateOf("")
-    }
-    TextField(
-        value = text,
-        onValueChange = {text = it},
-        label = {Text("What do you need to decide?")},
-        singleLine = false
-    )*/
-
 }
