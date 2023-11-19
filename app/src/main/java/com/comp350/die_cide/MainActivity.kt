@@ -9,6 +9,7 @@
 */
 package com.comp350.die_cide
 
+
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.comp350.die_cide.ui.theme.DieCideTheme
+import kotlinx.coroutines.*
 
 
 // TODO LIST:
@@ -40,7 +42,7 @@ import com.comp350.die_cide.ui.theme.DieCideTheme
 // [IN PROGRESS] Within the copies, convert existing code using XML to code using Jetpack Compose. This will also require making those new UI/UX data files/kotlin classes/etc. in the new directories
 // Rigorously test the converted code
 // Delete the old XML-based code once it is clear that the Jetpack Compose code works
-
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : AppCompatActivity() {
     // TODO: Adapt these left over variables (if applicable)
 //    private lateinit var openAIResponseDisplay: TextView
@@ -70,13 +72,14 @@ class MainActivity : AppCompatActivity() {
         MainScreen()
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreen() {
         // TODO: BRING BACK ALL NECESSARY VARIABLES
         //Question prompt variables
         var questionField by remember { mutableStateOf("") }
+        var userQuestion by remember { mutableStateOf("") }
         //Open AI variables
+        var openAIResponse by remember { mutableStateOf("") }
         var openAIResponseDisplay by remember { mutableStateOf("") }
         //Dice logic variables
         var diceValue : Int
@@ -114,6 +117,8 @@ class MainActivity : AppCompatActivity() {
                         .padding(16.dp)
                         .clickable {
                             // Speech-to-text logic
+                            questionField = ""
+                            // startSpeechToText()
                         }
                 )
 
@@ -125,7 +130,23 @@ class MainActivity : AppCompatActivity() {
                         .size(200.dp)
                         .padding(16.dp)
                         .clickable {
-                            // Dice Logic
+                            userQuestion = QuestionInput.getUserQuestion(questionField)
+
+
+                                diceValue = DiceLogic.roll()
+                                //TODO Dice Animation here
+
+                                // Enables dice animation to run throughout the duration of obtaining an OpenAI response
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    openAIResponse = withContext(Dispatchers.IO) {
+                                        Response().getResponse(userQuestion, diceValue).toString()
+                                    }
+                                    // TODO Display dice face here
+
+                                    openAIResponseDisplay = "$openAIResponse AND Dice Value $diceValue" //Dice value added to output for testing
+
+                                }
+
                         }
                 )
 
@@ -141,5 +162,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
 
 }

@@ -9,23 +9,24 @@
 package com.comp350.die_cide
 
 import android.widget.EditText
+import androidx.compose.ui.text.input.TextFieldValue
 
- class QuestionInput{
+class QuestionInput{
 
     companion object {
 
-         private fun hasText(userQuestionTextBox: EditText): Boolean {
-            return userQuestionTextBox.text.toString().isNotEmpty()
+         private fun hasText(userQuestionTextBox: String): Boolean {
+            return userQuestionTextBox.isNotEmpty()
          }
 
 
         // SPEECH TO TEXT BLOCK
 
-        fun getUserQuestion(userQuestionTextBox: EditText): String {
+        fun getUserQuestion(userQuestionTextBox: String): String {
             var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                question = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox
             }
 
             return question
