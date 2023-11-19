@@ -10,7 +10,10 @@
 package com.comp350.die_cide
 
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -31,6 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.comp350.die_cide.data.Interaction
+import com.comp350.die_cide.data.InteractionDao
+import com.comp350.die_cide.data.InteractionRoomDatabase
 import com.comp350.die_cide.ui.theme.DieCideTheme
 import kotlinx.coroutines.*
 
@@ -46,15 +52,17 @@ import kotlinx.coroutines.*
 class MainActivity : AppCompatActivity() {
     // TODO: Adapt these left over variables (if applicable)
 //    private lateinit var openAIResponseDisplay: TextView
-//    private lateinit var db: InteractionRoomDatabase
-//    private lateinit var interactionDao: InteractionDao
-//    private lateinit var interaction: Interaction
+    private lateinit var db: InteractionRoomDatabase
+    private lateinit var interactionDao: InteractionDao
+    private lateinit var interaction: Interaction
 //    private lateinit var questionField: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        db = InteractionRoomDatabase.getDatabase(this)
+        interactionDao = db.interactionDao()
         setContent {
             DieCideTheme {
                 // A surface container using the 'background' color from the theme
@@ -145,6 +153,9 @@ class MainActivity : AppCompatActivity() {
 
                                     openAIResponseDisplay = "$openAIResponse AND Dice Value $diceValue" //Dice value added to output for testing
 
+                                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
+                                    interactionDao.insert((interaction))
+
                                 }
 
                         }
@@ -161,7 +172,20 @@ class MainActivity : AppCompatActivity() {
 
 
             }
+
+
+        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
         }
 
+        return super.onOptionsItemSelected(item)
+    }
 
 }
