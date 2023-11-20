@@ -11,14 +11,19 @@ package com.comp350.die_cide
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.comp350.die_cide.data.Interaction
 import com.comp350.die_cide.data.InteractionDao
 import com.comp350.die_cide.data.InteractionRoomDatabase
@@ -56,6 +62,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
 //    private lateinit var questionField: EditText
+
+    //Background variables
+    // Define a state variable to hold the URI of the selected image
+    private var backgroundImageUri by mutableStateOf<Uri?>(null)
+    // Registers a photo picker activity launcher in single-select mode.
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+            backgroundImageUri = uri // Update the state variable
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -94,51 +116,59 @@ class MainActivity : AppCompatActivity() {
         //Speech-to-text variables
         //Rooms Database variables
 
-
-        Row {
-            // Title and Menu button
-
-        }
-        Row {
-            Column (modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Prompt field
-                TextField(
-                    value = questionField,
-                    onValueChange = { questionField = it },
-                    label = { Text("Type your question here:") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-
-                )
-                // Mic Button for Speech to text
-                Image(
-                    painter = painterResource(id = R.drawable.mic_image),
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Display the selected image as a background if it's not null
+            backgroundImageUri?.let { uri ->
+                AsyncImage(
+                    model = uri,
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(16.dp)
-                        .clickable {
-                            // Speech-to-text logic
-                            questionField = ""
-                            // startSpeechToText()
-                        }
+                    modifier = Modifier.fillMaxSize()
                 )
+            }
+            Row {
+                // Title and Menu button
 
-                // Dice image
-                Image(
-                    painter = painterResource(id = R.drawable.dice_20),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(200.dp)
-                        .padding(16.dp)
-                        .clickable {
-                            userQuestion = QuestionInput.getUserQuestion(questionField)
+            }
+            Row {
+                Column (modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Prompt field
+                    TextField(
+                        value = questionField,
+                        onValueChange = { questionField = it },
+                        label = { Text("Type your question here:") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+
+                    )
+                    // Mic Button for Speech to text
+                    Image(
+                        painter = painterResource(id = R.drawable.mic_image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(16.dp)
+                            .clickable {
+                                // Speech-to-text logic
+                                questionField = ""
+                                // startSpeechToText()
+                            }
+                    )
+
+                    // Dice image
+                    Image(
+                        painter = painterResource(id = R.drawable.dice_20),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(16.dp)
+                            .clickable {
+                                userQuestion = QuestionInput.getUserQuestion(questionField)
 
 
                                 diceValue = DiceLogic.roll()
@@ -158,20 +188,21 @@ class MainActivity : AppCompatActivity() {
 
                                 }
 
-                        }
-                )
+                            }
+                    )
 
-                // Response field
-                Text(
-                    text = openAIResponseDisplay,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
+                    // Response field
+                    Text(
+                        text = openAIResponseDisplay,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                }
+
+
             }
-
-
-            }
+        }
 
 
         }
@@ -183,6 +214,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
+            R.id.background -> pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         return super.onOptionsItemSelected(item)

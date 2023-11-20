@@ -4,4 +4,5 @@
     <string name="text_enter_prompt">What do you need to decide?</string>
     <string name="submit_question">Submit Question</string>
     <string name="history_option">History</string>
+    <string name="background_option">Background</string>
 </resources>
