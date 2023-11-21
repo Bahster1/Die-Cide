@@ -35,8 +35,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -108,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         //Question prompt variables
         var questionField by remember { mutableStateOf("") }
         var userQuestion by remember { mutableStateOf("") }
+        var isKeyboardVisible by remember { mutableStateOf(true) }
         //Open AI variables
         var openAIResponse by remember { mutableStateOf("") }
         var openAIResponseDisplay by remember { mutableStateOf("") }
@@ -115,6 +120,10 @@ class MainActivity : AppCompatActivity() {
         var diceValue : Int
         //Speech-to-text variables
         //Rooms Database variables
+
+        if (!isKeyboardVisible) {
+            HideKeyboard()
+        }
 
         Box(modifier = Modifier.fillMaxSize()) {
             // Display the selected image as a background if it's not null
@@ -143,11 +152,13 @@ class MainActivity : AppCompatActivity() {
                         label = { Text("Type your question here:") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(16.dp),
+
 
                     )
                     // Mic Button for Speech to text
                     Image(
+                        // TODO Add background to mic (or find a different mic image)
                         painter = painterResource(id = R.drawable.mic_image),
                         contentDescription = null,
                         modifier = Modifier
@@ -171,20 +182,34 @@ class MainActivity : AppCompatActivity() {
                                 userQuestion = QuestionInput.getUserQuestion(questionField)
 
 
-                                diceValue = DiceLogic.roll()
-                                //TODO Dice Animation here
+                                if (userQuestion.isBlank()) {
+                                    //
+                                } else {
+                                    isKeyboardVisible = false
 
-                                // Enables dice animation to run throughout the duration of obtaining an OpenAI response
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    openAIResponse = withContext(Dispatchers.IO) {
-                                        Response().getResponse(userQuestion, diceValue).toString()
+                                    diceValue = DiceLogic.roll()
+                                    //TODO Dice Animation here
+
+                                    // Enables dice animation to run throughout the duration of obtaining an OpenAI response
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        openAIResponse = withContext(Dispatchers.IO) {
+                                            Response()
+                                                .getResponse(userQuestion, diceValue)
+                                                .toString()
+                                        }
+                                        // TODO Display dice face here
+
+                                        openAIResponseDisplay =
+                                            "$openAIResponse AND Dice Value $diceValue" //Dice value added to output for testing
+
+                                        interaction = Interaction(
+                                            question = userQuestion,
+                                            number = diceValue,
+                                            answer = openAIResponse
+                                        )
+                                        interactionDao.insert((interaction))
+
                                     }
-                                    // TODO Display dice face here
-
-                                    openAIResponseDisplay = "$openAIResponse AND Dice Value $diceValue" //Dice value added to output for testing
-
-                                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
-                                    interactionDao.insert((interaction))
 
                                 }
 
@@ -193,6 +218,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Response field
                     Text(
+                        style = TextStyle(background = Color.White),
                         text = openAIResponseDisplay,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -205,7 +231,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        }
+    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -218,6 +244,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    fun HideKeyboard(){
+        val keyboardController = LocalSoftwareKeyboardController.current
+        keyboardController?.hide()
     }
 
 }
