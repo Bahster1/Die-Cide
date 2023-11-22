@@ -10,16 +10,20 @@
 package com.comp350.die_cide
 
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,12 +64,10 @@ import kotlinx.coroutines.*
 // Delete the old XML-based code once it is clear that the Jetpack Compose code works
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : AppCompatActivity() {
-    // TODO: Adapt these left over variables (if applicable)
-//    private lateinit var openAIResponseDisplay: TextView
     private lateinit var db: InteractionRoomDatabase
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
-//    private lateinit var questionField: EditText
+
 
     //Background variables
     // Define a state variable to hold the URI of the selected image
@@ -95,9 +97,9 @@ class MainActivity : AppCompatActivity() {
                 MainScreenPreview()
             }
         }
+
+
     }
-
-
 
 
     @Preview(showBackground = true)
@@ -108,7 +110,6 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun MainScreen() {
-        // TODO: BRING BACK ALL NECESSARY VARIABLES
         //Question prompt variables
         var questionField by remember { mutableStateOf("") }
         var userQuestion by remember { mutableStateOf("") }
@@ -117,12 +118,29 @@ class MainActivity : AppCompatActivity() {
         var openAIResponse by remember { mutableStateOf("") }
         var openAIResponseDisplay by remember { mutableStateOf("") }
         //Dice logic variables
-        var diceValue : Int
+        var diceValue by remember { mutableIntStateOf(1) }
+        var diceImage by remember { mutableIntStateOf(R.drawable.dice_20) }
+        var isDiceRolling by remember { mutableStateOf(false) }
+        
+
         //Speech-to-text variables
+        var isListening by remember { mutableStateOf(false) }
         //Rooms Database variables
 
         if (!isKeyboardVisible) {
             HideKeyboard()
+        }
+
+        if (isListening) {
+            StartSpeechToText{spokenText -> questionField = spokenText}
+            isListening = false
+        }
+
+        if (isDiceRolling) {
+
+            //DiceLogic.playDiceAnimation()
+            diceImage = DiceLogic.displayDiceFace(diceValue = diceValue)
+            isDiceRolling = false
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -165,15 +183,15 @@ class MainActivity : AppCompatActivity() {
                             .size(50.dp)
                             .padding(16.dp)
                             .clickable {
-                                // Speech-to-text logic
+                                // TODO Speech-to-text logic
                                 questionField = ""
-                                // startSpeechToText()
+                                isListening = true
                             }
                     )
 
                     // Dice image
                     Image(
-                        painter = painterResource(id = R.drawable.dice_20),
+                        painter = painterResource(id = diceImage),
                         contentDescription = null,
                         modifier = Modifier
                             .size(200.dp)
@@ -183,12 +201,12 @@ class MainActivity : AppCompatActivity() {
 
 
                                 if (userQuestion.isBlank()) {
-                                    //
+                                    // TODO Snackbar or error message here
                                 } else {
                                     isKeyboardVisible = false
 
                                     diceValue = DiceLogic.roll()
-                                    //TODO Dice Animation here
+                                    isDiceRolling = true
 
                                     // Enables dice animation to run throughout the duration of obtaining an OpenAI response
                                     CoroutineScope(Dispatchers.Main).launch {
@@ -197,10 +215,10 @@ class MainActivity : AppCompatActivity() {
                                                 .getResponse(userQuestion, diceValue)
                                                 .toString()
                                         }
-                                        // TODO Display dice face here
+
 
                                         openAIResponseDisplay =
-                                            "$openAIResponse AND Dice Value $diceValue" //Dice value added to output for testing
+                                            "$openAIResponse // AND Dice Value $diceValue" //Dice value added to output for testing
 
                                         interaction = Interaction(
                                             question = userQuestion,
@@ -253,4 +271,27 @@ class MainActivity : AppCompatActivity() {
         keyboardController?.hide()
     }
 
+
+    @Composable
+    fun StartSpeechToText(onSpeechRecognized: (String) -> Unit) {
+        // Initialize speech recognizer launcher
+        val speechRecognizerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val textResults = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                if (!textResults.isNullOrEmpty()) {
+                    val spokenText = textResults[0]
+                    // Call the callback function with the recognized text
+                    onSpeechRecognized(spokenText)
+                }
+            }
+        }
+
+        // Trigger the speech recognizer launcher
+        LaunchedEffect(speechRecognizerLauncher) {
+            speechRecognizerLauncher.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH))
+        }
+    }
 }
