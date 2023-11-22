@@ -4,24 +4,17 @@
  */
 package com.comp350.die_cide
 
-import android.content.Intent
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.comp350.die_cide.data.Interaction
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.comp350.die_cide.viewmodels.HistoryViewModel
+import com.comp350.die_cide.viewmodels.HistoryViewModelFactory
 
 class HistoryActivity : AppCompatActivity() {
     private val historyViewModel: HistoryViewModel by viewModels {
@@ -50,14 +43,34 @@ class HistoryActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.history_activity_menu, menu)
+        title = "History"
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.clear -> historyViewModel.deleteAll()
+            R.id.clear -> clear()
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    // https://www.tutorialkart.com/kotlin-android/android-alert-dialog-example/#gsc.tab=0
+    private fun clear() {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        dialogBuilder.setMessage("Are you sure you want to clear your history?")
+            .setCancelable(true)
+            .setPositiveButton("Yes") { _, _ ->
+                historyViewModel.deleteAll()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val alert = dialogBuilder.create()
+
+        alert.setTitle("Warning")
+        alert.show()
     }
 }

@@ -31,21 +31,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
+import com.comp350.die_cide.viewmodels.MainViewModel
+import com.comp350.die_cide.viewmodels.MainViewModelFactory
+import kotlin.jvm.internal.Intrinsics
 
 class MainActivity : AppCompatActivity() {
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory((application as DieCideApplication).repository)
+    }
 
     private lateinit var openAIResponseDisplay: TextView
-    private lateinit var db: InteractionRoomDatabase
-    private lateinit var interactionDao: InteractionDao
-    private lateinit var interaction: Interaction
     private lateinit var questionField : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
-        db = InteractionRoomDatabase.getDatabase(this)
-        interactionDao = db.interactionDao()
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         var diceValue : Int
@@ -66,8 +68,6 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
             } else {
                 hideKeyboard()
-//                val mediaPlayer = MediaPlayer.create(this,R.raw.rolling_dice_sfx)
-//                mediaPlayer.start()
                 diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
                 DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
 
@@ -79,11 +79,8 @@ class MainActivity : AppCompatActivity() {
 
                     DiceLogic.displayDiceFace(diceImage, diceValue)
                     openAIResponseDisplay.text = openAIResponse
-
-                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse!!)
-                    interactionDao.insert((interaction))
+                    mainViewModel.insert(Interaction(question = userQuestion, number = diceValue, answer = openAIResponse!!))
                 }
-//                mediaPlayer.release()
             }
         }
     }

@@ -7,12 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +27,7 @@ class HistoryAdapter : ListAdapter<Interaction, HistoryAdapter.HistoryViewHolder
         private val numberTextView: TextView = itemView.findViewById(R.id.numberTextView)
         private val questionTextView: TextView = itemView.findViewById(R.id.questionTextView)
 
-        fun bind(question: String?, number: Int?, answer: String?) {
+        fun bind(question: String, number: Int, answer: String) {
             answerTextView.text = answer
             numberTextView.text = number.toString()
             questionTextView.text = question
@@ -45,15 +39,6 @@ class HistoryAdapter : ListAdapter<Interaction, HistoryAdapter.HistoryViewHolder
                     .inflate(R.layout.interaction_item, parent, false)
 
                 return HistoryViewHolder(view)
-            }
-        }
-        
-        @Composable
-        fun InteractionItem(interaction: Interaction, modifier: Modifier = Modifier) {
-            Column(modifier.fillMaxWidth()) {
-                Text(text = interaction.question)
-                Text(text = interaction.number.toString())
-                Text(text = interaction.answer)
             }
         }
     }

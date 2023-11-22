@@ -1,7 +1,7 @@
 /*
     * Copyright 2023 Bradley Walsh
  */
-package com.comp350.die_cide
+package com.comp350.die_cide.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -14,10 +14,6 @@ import kotlinx.coroutines.launch
 
 class HistoryViewModel(private val repository: InteractionRepository): ViewModel() {
     val allInteractions: LiveData<List<Interaction>> = repository.allInteractions.asLiveData()
-
-    fun insert(interaction: Interaction) = viewModelScope.launch {
-        repository.insert(interaction)
-    }
 
     fun deleteAll() = viewModelScope.launch {
         repository.deleteAll()
