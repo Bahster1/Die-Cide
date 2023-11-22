@@ -10,15 +10,12 @@
 package com.comp350.die_cide
 
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,21 +65,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var interactionDao: InteractionDao
     private lateinit var interaction: Interaction
 
-
     //Background variables
     // Define a state variable to hold the URI of the selected image
     private var backgroundImageUri by mutableStateOf<Uri?>(null)
+
     // Registers a photo picker activity launcher in single-select mode.
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        // Callback is invoked after the user selects a media item or closes the
-        // photo picker.
-        if (uri != null) {
-            Log.d("PhotoPicker", "Selected URI: $uri")
-            backgroundImageUri = uri // Update the state variable
-        } else {
-            Log.d("PhotoPicker", "No media selected")
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                backgroundImageUri = uri // Update the state variable
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -121,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         var diceValue by remember { mutableIntStateOf(1) }
         var diceImage by remember { mutableIntStateOf(R.drawable.dice_20) }
         var isDiceRolling by remember { mutableStateOf(false) }
-        
+
 
         //Speech-to-text variables
         var isListening by remember { mutableStateOf(false) }
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (isListening) {
-            StartSpeechToText{spokenText -> questionField = spokenText}
             isListening = false
         }
 
@@ -157,9 +154,10 @@ class MainActivity : AppCompatActivity() {
 
             }
             Row {
-                Column (modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -173,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                             .padding(16.dp),
 
 
-                    )
+                        )
                     // Mic Button for Speech to text
                     Image(
                         // TODO Add background to mic (or find a different mic image)
@@ -250,6 +248,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -266,32 +265,10 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun HideKeyboard(){
+    fun HideKeyboard() {
         val keyboardController = LocalSoftwareKeyboardController.current
         keyboardController?.hide()
     }
 
 
-    @Composable
-    fun StartSpeechToText(onSpeechRecognized: (String) -> Unit) {
-        // Initialize speech recognizer launcher
-        val speechRecognizerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val textResults = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                if (!textResults.isNullOrEmpty()) {
-                    val spokenText = textResults[0]
-                    // Call the callback function with the recognized text
-                    onSpeechRecognized(spokenText)
-                }
-            }
-        }
-
-        // Trigger the speech recognizer launcher
-        LaunchedEffect(speechRecognizerLauncher) {
-            speechRecognizerLauncher.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH))
-        }
-    }
 }
