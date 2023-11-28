@@ -17,18 +17,18 @@ import android.widget.EditText
 
         // Returns True if the passed EditText element has text in it
         // Returns False if the passed EditText element does not have text in it
-         private fun hasText(userQuestionTextBox: EditText): Boolean {
-            return userQuestionTextBox.text.toString().isNotEmpty()
+         private fun hasText(userQuestionTextBox: String): Boolean {
+            return userQuestionTextBox.isNotEmpty()
          }
 
 
         // SPEECH TO TEXT BLOCK
 
-        fun getUserQuestion(userQuestionTextBox: EditText): String {
+        fun getUserQuestion(userQuestionTextBox: String): String {
             var question = ""
 
             if (hasText(userQuestionTextBox)) {
-                question = userQuestionTextBox.text.toString()
+                question = userQuestionTextBox
             }
 
             return question
