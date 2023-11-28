@@ -6,6 +6,8 @@
     * Copyright 2023 Taylor Asplund
     * Copyright 2023 Bradley Walsh
 */
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.comp350.die_cide
 
 import android.view.Menu
@@ -31,7 +33,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.comp350.die_cide.ui.theme.DieCideTheme
 import com.comp350.die_cide.viewmodels.MainViewModel
 import com.comp350.die_cide.viewmodels.MainViewModelFactory
 import kotlin.jvm.internal.Intrinsics
@@ -47,6 +69,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setContent {
+            DieCideTheme {
+                // A surface container using the 'background' color from the theme
+                MainScreenPreview()
+            }
+        }
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
@@ -85,9 +113,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // SPEECH TO TEXT BLOCK
-    // 10/30/23 - This will be implemented in QuestionInput.kt later and cleaned up. For the
-    // sprint demo, I assumed working code is better than clean code FOR NOW.
+    @Preview(showBackground = true)
+    @Composable
+    fun MainScreenPreview() {
+        MainScreen()
+    }
+
+    @Composable
+    fun MainScreen() {
+        var questionField by remember { mutableStateOf("") }
+
+
+        Row {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Prompt field
+                TextField(
+                    value = questionField,
+                    onValueChange = { questionField = it },
+                    label = { Text("Type your question here:") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        }
+    }
+
+
+
     private fun startSpeechToText() {
         val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)

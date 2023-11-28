@@ -56,6 +56,7 @@ repositories {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui-tooling-preview-android:1.5.4")
     val room_version = "2.5.2"
     val lifecycle_version = "2.6.2"
 
