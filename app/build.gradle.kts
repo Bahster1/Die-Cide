@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.comp350.die_cide"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.comp350.die_cide"

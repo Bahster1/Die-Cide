@@ -69,12 +69,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setContent {
-            DieCideTheme {
-                // A surface container using the 'background' color from the theme
-                MainScreenPreview()
-            }
-        }
+//        setContent {
+//            DieCideTheme {
+//                // A surface container using the 'background' color from the theme
+//                MainScreenPreview()
+//            }
+//        }
         openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
 
         val diceImage: ImageView = findViewById(R.id.diceBtn)
