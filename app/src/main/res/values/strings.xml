@@ -5,4 +5,5 @@
     <string name="submit_question">Submit Question</string>
     <string name="history_option">History</string>
     <string name="clear_history_option">Clear</string>
+    <string name="background_option">Background</string>
 </resources>

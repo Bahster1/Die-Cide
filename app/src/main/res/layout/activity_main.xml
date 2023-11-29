@@ -8,6 +8,15 @@
     tools:content="DiceLogic"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/TopComposeLayout"
@@ -18,9 +27,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-
-
     </androidx.compose.ui.platform.ComposeView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
