@@ -95,6 +95,10 @@ class DiceLogic {
                 })
                 .start()
         }
+
+        fun checkIfDiceIsClickable() : Boolean {
+            return !isDiceRotating
+        }
     }
 }
 

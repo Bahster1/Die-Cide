@@ -142,10 +142,14 @@ class MainActivity : AppCompatActivity() {
         val diceImage: ImageView = findViewById(R.id.diceBtn)
         val diceValue : Int
         var openAIResponse: String?
+        var isDiceClickable = true
+
+        isDiceClickable = DiceLogic.checkIfDiceIsClickable()
 
         if (questionField.isBlank()) {
             Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
-        } else {
+        } else if (isDiceClickable) {
+
             diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
             DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
 
