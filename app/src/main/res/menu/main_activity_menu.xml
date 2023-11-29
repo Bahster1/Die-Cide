@@ -5,4 +5,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="@string/history_option" />
+    <item
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/background_option" />
 </menu>

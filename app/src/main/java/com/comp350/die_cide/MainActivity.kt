@@ -11,11 +11,17 @@
 package com.comp350.die_cide
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -55,9 +61,29 @@ class MainActivity : AppCompatActivity() {
         MainViewModelFactory((application as DieCideApplication).repository)
     }
 
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+            val bitmap = getBitmapFromUri(uri)
+            backgroundImage.setImageBitmap(bitmap)
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
+
+    private lateinit var backgroundImage: ImageView
+
+    private fun getBitmapFromUri(uri: Uri): Bitmap {
+        val inputStream = contentResolver.openInputStream(uri)
+        return BitmapFactory.decodeStream(inputStream)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        backgroundImage = findViewById(R.id.backgroundImage)
 
         findViewById<ComposeView>(R.id.TopComposeLayout).setContent {
             DieCideTheme {
@@ -144,6 +170,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
+            R.id.background -> pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         return super.onOptionsItemSelected(item)
