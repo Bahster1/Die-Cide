@@ -13,6 +13,7 @@ package com.comp350.die_cide
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -162,6 +163,10 @@ class MainActivity : AppCompatActivity() {
                 DiceLogic.displayDiceFace(diceImage, diceValue)
                 openAIResponseDisplay.text = openAIResponse
                 mainViewModel.insert(Interaction(question = questionField, number = diceValue, answer = openAIResponse!!))
+                //openAIResponseDisplay.setBackgroundColor(Color.parseColor("#d9d9d9"))
+                openAIResponseDisplay.setBackgroundResource(R.drawable.rectangle_drawable)
+                openAIResponseDisplay.setPadding(30,10,30,10)
+
             }
         }
     }
