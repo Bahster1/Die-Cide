@@ -6,143 +6,189 @@
     * Copyright 2023 Taylor Asplund
     * Copyright 2023 Bradley Walsh
 */
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.comp350.die_cide
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.comp350.die_cide.data.Interaction
-import com.comp350.die_cide.data.InteractionDao
-import com.comp350.die_cide.data.InteractionRoomDatabase
-import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.media.MediaPlayer
-import android.os.Bundle
-import android.speech.RecognizerIntent
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.comp350.die_cide.QuestionInput.Companion.getUserQuestion
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.comp350.die_cide.data.Interaction
+import com.comp350.die_cide.ui.theme.DieCideTheme
+import com.comp350.die_cide.viewmodels.MainViewModel
+import com.comp350.die_cide.viewmodels.MainViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.view.inputmethod.InputMethodManager
 
 class MainActivity : AppCompatActivity() {
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory((application as DieCideApplication).repository)
+    }
 
-    private lateinit var openAIResponseDisplay: TextView
-    private lateinit var db: InteractionRoomDatabase
-    private lateinit var interactionDao: InteractionDao
-    private lateinit var interaction: Interaction
-    private lateinit var questionField : EditText
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+            val bitmap = getBitmapFromUri(uri)
+            backgroundImage.setImageBitmap(bitmap)
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
+
+    private lateinit var backgroundImage: ImageView
+
+    private fun getBitmapFromUri(uri: Uri): Bitmap {
+        val inputStream = contentResolver.openInputStream(uri)
+        return BitmapFactory.decodeStream(inputStream)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        openAIResponseDisplay = findViewById(R.id.OpenAIResponse)
-        db = InteractionRoomDatabase.getDatabase(this)
-        interactionDao = db.interactionDao()
+        backgroundImage = findViewById(R.id.backgroundImage)
 
+        findViewById<ComposeView>(R.id.TopComposeLayout).setContent {
+            DieCideTheme {
+                MainScreen()
+            }
+        }
+    }
 
+    @Preview(showBackground = true)
+    @Composable
+    fun MainScreenPreview() {
+        MainScreen()
+    }
 
-        val diceImage: ImageView = findViewById(R.id.diceBtn)
-        var diceValue : Int
-        questionField = findViewById(R.id.userQuestion)
-        var userQuestion: String
-        var openAIResponse: String?
-        val micBtn: ImageView = findViewById(R.id.micImage)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun MainScreen() {
+        var questionField by remember { mutableStateOf("") }
+        var isKeyboardVisible by remember { mutableStateOf(true) }
 
-
-        micBtn.setOnClickListener{
-            questionField.text = null
-            startSpeechToText()
+        if (!isKeyboardVisible) {
+            HideKeyboard()
         }
 
-
-        diceImage.setOnClickListener {
-            userQuestion = getUserQuestion(questionField)
-
-
-            if (userQuestion.isBlank()) {
-                Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
-
-            } else {
-                hideKeyboard()
-//                val mediaPlayer = MediaPlayer.create(this,R.raw.rolling_dice_sfx)
-//                mediaPlayer.start()
-                diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
-                DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
-
-
-
-                // Enables dice animation to run throughout the duration of obtaining an OpenAI response
-                CoroutineScope(Dispatchers.Main).launch {
-                    openAIResponse = withContext(Dispatchers.IO) {
-                        Response().getResponse(userQuestion, diceValue)
+        Row {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Prompt field
+                TextField(
+                    value = questionField,
+                    onValueChange = { questionField = it },
+                    label = { Text("Type your question here:") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+                Button(
+                    onClick = {
+                        rollAction(questionField)
+                        isKeyboardVisible = false
                     }
+                ) {
+                    Text(text = "ROLL!")
+                }
+            }
+        }
+    }
 
-                    DiceLogic.displayDiceFace(diceImage, diceValue)
-                    openAIResponseDisplay.text = openAIResponse
+    private fun rollAction(questionField : String){
+        val openAIResponseDisplay: TextView = findViewById(R.id.OpenAIResponse)
+        val diceImage: ImageView = findViewById(R.id.diceBtn)
+        val diceValue : Int
+        var openAIResponse: String?
+        var isDiceClickable = true
 
-                  
-                    interaction = Interaction(question = userQuestion, number = diceValue, answer = openAIResponse)
-                    interactionDao.insert((interaction))
+        isDiceClickable = DiceLogic.checkIfDiceIsClickable()
+
+        if (questionField.isBlank()) {
+            Snackbar.make(findViewById(R.id.MiddleConstraintLayout), "Please enter a question", Snackbar.LENGTH_SHORT).show()
+        } else if (isDiceClickable) {
+
+            diceValue = DiceLogic.roll()   // DICE LOGIC BLOCK
+            DiceLogic.playDiceAnimation(diceImage, 5000)   // DICE ANIMATION BLOCK
+
+            // Enables dice animation to run throughout the duration of obtaining an OpenAI response
+            CoroutineScope(Dispatchers.Main).launch {
+                openAIResponse = withContext(Dispatchers.IO) {
+                    Response().getResponse(questionField, diceValue)
                 }
 
-//                mediaPlayer.release()
-            }
-        }
-    }
-
-    // SPEECH TO TEXT BLOCK
-    // 10/30/23 - This will be implemented in QuestionInput.kt later and cleaned up. For the
-    // sprint demo, I assumed working code is better than clean code FOR NOW.
-    private fun startSpeechToText() {
-        val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
-
-        try {
-            startActivityForResult(speechIntent, 1)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "Speech recognition not available on this device", Toast.LENGTH_SHORT).show()
-        }
-    }
-    //Confirms use of startSpeechToText function
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            if (!result.isNullOrEmpty()) {
-                val spokenText = result[0]
-                questionField.setText(spokenText)
+                DiceLogic.displayDiceFace(diceImage, diceValue)
+                openAIResponseDisplay.text = openAIResponse
+                mainViewModel.insert(Interaction(question = questionField, number = diceValue, answer = openAIResponse!!))
+                //openAIResponseDisplay.setBackgroundColor(Color.parseColor("#d9d9d9"))
+                openAIResponseDisplay.setBackgroundResource(R.drawable.rectangle_drawable)
+                openAIResponseDisplay.setPadding(30,10,30,10)
 
             }
-
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
+            R.id.background -> pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hideKeyboard(){
-        val keyboardHider = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        keyboardHider.hideSoftInputFromWindow(questionField.windowToken, 0)
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    private fun HideKeyboard(){
+        val keyboardController = LocalSoftwareKeyboardController.current
+        keyboardController?.hide()
     }
 }
