@@ -9,8 +9,8 @@
     tools:context=".MainActivity">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TopConstraintLayout"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/TopComposeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingHorizontal="20dp"
@@ -19,44 +19,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/userQuestion"
-            android:layout_width="291dp"
-            android:layout_height="52dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="@string/text_enter_prompt"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            android:paddingVertical="12dp"
-            android:scrollHorizontally="false"
-            android:selectAllOnFocus="false"
-            android:singleLine="false"
-            android:textAlignment="viewStart"
-            android:textColorHint="#8D6E63"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.232"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appTitle"
-            app:layout_constraintVertical_bias="0.149" />
 
-        <ImageView
-            android:id="@+id/micImage"
-            android:layout_width="60dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="335dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="92dp"
-            android:contentDescription="A mic icon for Speech-To-text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@android:drawable/presence_audio_online" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.compose.ui.platform.ComposeView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/MiddleConstraintLayout"
@@ -65,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@id/BottomConstraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TopConstraintLayout">
+        app:layout_constraintTop_toBottomOf="@id/TopComposeLayout">
 
         <ImageView
             android:id="@+id/diceBtn"

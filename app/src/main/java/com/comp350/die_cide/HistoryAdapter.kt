@@ -27,7 +27,7 @@ class HistoryAdapter : ListAdapter<Interaction, HistoryAdapter.HistoryViewHolder
         private val numberTextView: TextView = itemView.findViewById(R.id.numberTextView)
         private val questionTextView: TextView = itemView.findViewById(R.id.questionTextView)
 
-        fun bind(question: String?, number: Int?, answer: String?) {
+        fun bind(question: String, number: Int, answer: String) {
             answerTextView.text = answer
             numberTextView.text = number.toString()
             questionTextView.text = question

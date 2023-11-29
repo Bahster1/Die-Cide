@@ -19,5 +19,5 @@ data class Interaction (
     val number: Int,
 
     @ColumnInfo(name = "answer")
-    val answer: String?
+    val answer: String
 )
