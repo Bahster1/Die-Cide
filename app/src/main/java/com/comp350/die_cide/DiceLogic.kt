@@ -96,11 +96,8 @@ class DiceLogic {
                 .start()
         }
 
-        fun checkIfDiceIsClickable(isDiceClickable: Boolean) :Boolean {
-            if(isDiceRotating){
-                return !isDiceClickable
-            }
-            return isDiceClickable
+        fun checkIfDiceIsClickable() : Boolean {
+            return !isDiceRotating
         }
     }
 }
